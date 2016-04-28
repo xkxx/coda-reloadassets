@@ -1,0 +1,57 @@
+#!/usr/bin/env node
+
+var rdbgp = require('rdbgp');
+var hotpatch = require('rdbgp-reloadassets');
+
+var options = parse(process.argv.slice(2));
+
+var client = connect(options);
+var stream = hotpatch(client, options);
+
+function parse(argv) {
+  return argv.reduce(function(options, value, index, argv) {
+    var remote = /^([^:]+):(\d+)$/.exec(value);
+    if (remote) {
+      options.host = match[1];
+      options.port = parseInt(match[2], 10);
+      return options;
+    }
+
+    process.stdout.write('connecting to ' + '' + options.port + ' ..');
+  }, {
+    host: 'localhost',
+    port: 9222,
+    timeout: 60 * 1000,
+  });
+}
+
+function connect(options) {
+  var client = rdbgp.connect(options);
+  var time = Date.now();
+
+  process.stdout.write('connecting to ' + options.host + ':' + options.port + ' ..');
+
+  client.on('error', function retry(error) {
+    var now = Date.now();
+
+    if ((now - time) > options.timeout) {
+      client.removeListener('error', retry);
+    }
+
+    setTimeout(function() {
+      process.stdout.write('.');
+      client.connect(options);
+    }, 500);
+  });
+
+  client.on('ready', function() {
+    process.stdout.write(' ok\n');
+  });
+
+  return client;
+}
+
+function fail(error) {
+  process.write(error + '\n');
+  process.exit(1);
+}

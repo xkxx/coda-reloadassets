@@ -1,0 +1,22 @@
+{
+  "author": {
+    "email": "xkxiang@gmail.com",
+    "name": "xkxx"
+  },
+  "bin": {
+    "coda-hotpatch": "bin/coda-reloadassets"
+  },
+  "dependencies": {
+    "rdbgp": "github:codajs/rdbgp",
+    "rdbgp-reloadassets": "github:xkxx/rdbgp-reloadassets"
+  },
+  "description": "Coda Reload Assets is a command line tool which monitors the file system for file changes and reload images and other asset files as they change.",
+  "devDependencies": {},
+  "license": "MIT",
+  "name": "coda-reloadassets",
+  "optionalDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "0.0.0"
+}
